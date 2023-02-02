@@ -348,7 +348,8 @@ public class BrokerConfig extends BrokerIdentity {
     public enum MetricsExporterType {
         DISABLE(0),
         OTLP_GRPC(1),
-        PROM(2);
+        PROM(2),
+        LOG(3);
 
         private final int value;
 
