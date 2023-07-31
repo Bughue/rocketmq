@@ -207,6 +207,8 @@ public class BrokerMetricsManager {
                 return StringUtils.isNotBlank(brokerConfig.getMetricsGrpcExporterTarget());
             case PROM:
                 return true;
+            case LOG:
+                // todo 5678
         }
         return false;
     }
@@ -294,6 +296,10 @@ public class BrokerMetricsManager {
                 .setPort(brokerConfig.getMetricsPromExporterPort())
                 .build();
             providerBuilder.registerMetricReader(prometheusHttpServer);
+        }
+
+        if (metricsExporterType == BrokerConfig.MetricsExporterType.LOG) {
+            // todo 5678
         }
 
         registerMetricsView(providerBuilder);
@@ -505,6 +511,9 @@ public class BrokerMetricsManager {
         if (brokerConfig.getMetricsExporterType() == BrokerConfig.MetricsExporterType.PROM) {
             prometheusHttpServer.forceFlush();
             prometheusHttpServer.shutdown();
+        }
+        if (brokerConfig.getMetricsExporterType() == BrokerConfig.MetricsExporterType.LOG) {
+            // todo 5678
         }
     }
 

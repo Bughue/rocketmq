@@ -17,7 +17,6 @@
 package org.apache.rocketmq.example.quickstart;
 
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
-import org.apache.rocketmq.client.consumer.MessageSelector;
 import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyStatus;
 import org.apache.rocketmq.client.consumer.listener.MessageListenerConcurrently;
 import org.apache.rocketmq.client.exception.MQClientException;
@@ -26,9 +25,9 @@ import org.apache.rocketmq.common.consumer.ConsumeFromWhere;
 /**
  * This example shows how to subscribe and consume messages using providing {@link DefaultMQPushConsumer}.
  */
-public class Consumer {
+public class Consumer_OtherGroup {
 
-    public static final String CONSUMER_GROUP = "string_consumer";
+    public static final String CONSUMER_GROUP = "string_consumer_22222";
     public static final String DEFAULT_NAMESRVADDR = "10.162.85.140:9876";
     public static final String TOPIC = "TopicTest";
 
@@ -61,7 +60,8 @@ public class Consumer {
         /*
          * Subscribe one more topic to consume.
          */
-        consumer.subscribe(Producer222.TOPIC, "TagA");
+        consumer.subscribe(Producer222.TOPIC, "*");
+//        consumer.subscribe(Producer222.TOPIC, "TagA");
 //        consumer.subscribe(Producer222.TOPIC, MessageSelector.bySql("age >= 5"));
 
         /*

@@ -23,14 +23,15 @@ import org.apache.rocketmq.client.consumer.listener.MessageListenerConcurrently;
 import org.apache.rocketmq.client.exception.MQClientException;
 import org.apache.rocketmq.common.consumer.ConsumeFromWhere;
 
+import static org.apache.rocketmq.example.quickstart.Consumer.CONSUMER_GROUP;
+import static org.apache.rocketmq.example.quickstart.Consumer.DEFAULT_NAMESRVADDR;
+
 /**
  * This example shows how to subscribe and consume messages using providing {@link DefaultMQPushConsumer}.
  */
-public class Consumer {
+public class Consumer2 {
 
-    public static final String CONSUMER_GROUP = "string_consumer";
-    public static final String DEFAULT_NAMESRVADDR = "10.162.85.140:9876";
-    public static final String TOPIC = "TopicTest";
+
 
     public static void main(String[] args) throws MQClientException {
 
@@ -61,14 +62,17 @@ public class Consumer {
         /*
          * Subscribe one more topic to consume.
          */
-        consumer.subscribe(Producer222.TOPIC, "TagA");
-//        consumer.subscribe(Producer222.TOPIC, MessageSelector.bySql("age >= 5"));
+//        consumer.subscribe(Producer222.TOPIC, "TagA");
+        consumer.subscribe(Producer222.TOPIC, "TagB");
+//        consumer.subscribe(Producer222.TOPIC, MessageSelector.bySql("age >= 15"));
+
+//        consumer.subscribe("Topic--B", "*");
 
         /*
          *  Register callback to execute on arrival of messages fetched from brokers.
          */
         consumer.registerMessageListener((MessageListenerConcurrently) (msg, context) -> {
-            System.out.printf("[consumer1]%s Receive New Messages: %s %n", Thread.currentThread().getName(), new String(msg.get(0).getBody()));
+            System.out.printf("[consumer2]%s Receive New Messages: %s %n", Thread.currentThread().getName(), new String(msg.get(0).getBody()));
             return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
         });
 

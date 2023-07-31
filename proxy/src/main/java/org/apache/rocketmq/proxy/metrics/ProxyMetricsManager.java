@@ -21,6 +21,7 @@ import io.opentelemetry.api.common.Attributes;
 import io.opentelemetry.api.common.AttributesBuilder;
 import io.opentelemetry.api.metrics.Meter;
 import io.opentelemetry.api.metrics.ObservableLongGauge;
+import io.opentelemetry.exporter.logging.LoggingMetricExporter;
 import io.opentelemetry.exporter.otlp.metrics.OtlpGrpcMetricExporter;
 import io.opentelemetry.exporter.otlp.metrics.OtlpGrpcMetricExporterBuilder;
 import io.opentelemetry.exporter.prometheus.PrometheusHttpServer;
@@ -63,6 +64,7 @@ public class ProxyMetricsManager implements StartAndShutdown {
     public static Supplier<AttributesBuilder> attributesBuilderSupplier;
 
     private OtlpGrpcMetricExporter metricExporter;
+    private LoggingMetricExporter logMetricExporter;
     private PeriodicMetricReader periodicMetricReader;
     private PrometheusHttpServer prometheusHttpServer;
 
@@ -123,6 +125,8 @@ public class ProxyMetricsManager implements StartAndShutdown {
                 return StringUtils.isNotBlank(proxyConfig.getMetricsGrpcExporterTarget());
             case PROM:
                 return true;
+            case LOG:
+                //todo 5678
         }
         return false;
     }
@@ -213,6 +217,18 @@ public class ProxyMetricsManager implements StartAndShutdown {
             providerBuilder.registerMetricReader(prometheusHttpServer);
         }
 
+        if (metricsExporterType == BrokerConfig.MetricsExporterType.LOG) {
+            // todo
+
+            logMetricExporter = LoggingMetricExporter.create();
+
+            periodicMetricReader = PeriodicMetricReader.builder(logMetricExporter)
+//                    .setInterval(proxyConfig.getMetricGrpcExporterIntervalInMills(), TimeUnit.MILLISECONDS)
+                    .build();
+
+            providerBuilder.registerMetricReader(periodicMetricReader);
+        }
+
         Meter proxyMeter = OpenTelemetrySdk.builder()
             .setMeterProvider(providerBuilder.build())
             .build()
@@ -231,6 +247,9 @@ public class ProxyMetricsManager implements StartAndShutdown {
         if (proxyConfig.getMetricsExporterType() == BrokerConfig.MetricsExporterType.PROM) {
             prometheusHttpServer.forceFlush();
             prometheusHttpServer.shutdown();
+        }
+        if (proxyConfig.getMetricsExporterType() == BrokerConfig.MetricsExporterType.LOG) {
+            // todo 5678
         }
     }
 }

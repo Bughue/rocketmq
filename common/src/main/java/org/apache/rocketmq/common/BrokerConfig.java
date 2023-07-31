@@ -367,6 +367,8 @@ public class BrokerConfig extends BrokerIdentity {
                     return OTLP_GRPC;
                 case 2:
                     return PROM;
+                case 3:
+                    return LOG;
                 default:
                     return DISABLE;
             }
